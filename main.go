@@ -15,10 +15,10 @@ func main() {
 
 	info.Println("Facepunch by phone, S16/03/2014")
 	debug.Println("Debug text enabled")
-
+	os.Setenv("HOST", "127.0.0.1")
+	os.Setenv("PORT", "3223")
 	m := martini.Classic()
-	m.Get("/incoming", func() string {
-		return "Hello world!"
-	})
+	m.Get("/incoming", newCaller)
+	m.Post("/incoming", newCaller)
 	m.Run()
 }
