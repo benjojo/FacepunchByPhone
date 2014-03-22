@@ -16,7 +16,7 @@ const (
 )
 
 func newCaller() string {
-	Testresponce := Response{Say: WelcomeText}
+	Testresponce := Response{Say: WelcomeText + GetSectionsString()}
 	output, _ := xml.Marshal(Testresponce)
 	return XMLHead + string(output)
 }
