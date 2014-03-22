@@ -24,7 +24,7 @@ func GetSectionsString() string {
 	output := ""
 	Sections := ListSections()
 	for k, v := range Sections {
-		output += fmt.Sprintf("Press %d for %s.", k, v.Name)
+		output += fmt.Sprintf("Press %d for %s... ", k, v.Name)
 	}
 	return output
 }
