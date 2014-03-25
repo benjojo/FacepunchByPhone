@@ -53,20 +53,36 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	}
 
 	listing, e := GetSectionThreads(ListSections()[int(i)].SID)
+
 	if e != nil {
 		Testresponce.Say = "I'm sorry we are unable to get a listing at this time"
 		output, _ := xml.Marshal(Testresponce)
 		return XMLHead + string(output)
 	}
 
+	HandleCount++
+	ThreadCache[HandleCount] = listing
+
+	InputSetup := Gather{}
+	InputSetup.Say = "Please key what thread you want to browse"
+	InputSetup.NumDigi = "1"
+	InputSetup.Action = "/threads"
+	InputSetup.Method = "GET"
+
+	Testresponce.Gather = InputSetup
+
 	output := ""
 
 	for k, v := range listing {
 		output += fmt.Sprintf("Press %d for the thread %s... ", k, v.ThreadName)
+		debug.Println(v.ThreadName)
 	}
-
+	debug.Println(output)
 	Testresponce.Say = output
-	outputb, _ := xml.Marshal(Testresponce)
+	outputb, e := xml.Marshal(Testresponce)
+	if e != nil {
+		debug.Println("Oh fuck. ", e)
+	}
 	return XMLHead + string(outputb)
 
 }

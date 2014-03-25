@@ -8,11 +8,14 @@ import (
 
 var info *log.Logger
 var debug *log.Logger
+var ThreadCache map[int][]Thread
+var HandleCount int
 
 func main() {
 	info = log.New(os.Stdout, "[info] ", log.Ltime)
 	debug = log.New(os.Stdout, "[debug] ", log.Ltime|log.Lshortfile)
-
+	debug.Println(ThreadCache)
+	ThreadCache = make(map[int][]Thread)
 	info.Println("Facepunch by phone, S16/03/2014")
 	debug.Println("Debug text enabled")
 	os.Setenv("HOST", "127.0.0.1")
