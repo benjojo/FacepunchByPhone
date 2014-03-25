@@ -66,7 +66,7 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	InputSetup := Gather{}
 	InputSetup.Say = "Please key what thread you want to browse"
 	InputSetup.NumDigi = "1"
-	InputSetup.Action = "/threads"
+	InputSetup.Action = fmt.Sprintf("/threads/%d", HandleCount)
 	InputSetup.Method = "GET"
 
 	Testresponce.Gather = InputSetup
