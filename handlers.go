@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"github.com/codegangsta/martini"
 	"net/http"
 	"strconv"
 )
@@ -87,6 +88,6 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 
 }
 
-func readThread(rw http.ResponseWriter, req *http.Request) {
+func readThread(rw http.ResponseWriter, req *http.Request, prams *martini.Params) {
 
 }
