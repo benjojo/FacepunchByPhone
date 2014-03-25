@@ -89,5 +89,26 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 }
 
 func readThread(rw http.ResponseWriter, req *http.Request, prams *martini.Params) {
+	Testresponce := Response{}
+
+	handler, handlere := strconv.ParseInt(prams["handler"], 10, 64)
+
+	diget := req.URL.Query().Get("Digits")
+	dnum, digete := strconv.ParseInt(diget, 10, 64)
+	if handlere != nil || digete != nil {
+		Testresponce.Say = "An internal error happened... sorry"
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		return XMLHead + string(outputb)
+	}
+
+	Testresponce.Say = "hi"
+	outputb, e := xml.Marshal(Testresponce)
+	if e != nil {
+		debug.Println("Oh fuck. ", e)
+	}
+	return XMLHead + string(outputb)
 
 }
