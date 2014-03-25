@@ -26,5 +26,7 @@ func main() {
 
 	m.Get("/sections", readSections)
 
+	m.Get("/threads/:handler", readThread)
+
 	m.Run()
 }

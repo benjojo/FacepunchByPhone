@@ -86,3 +86,7 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	return XMLHead + string(outputb)
 
 }
+
+func readThread(rw http.ResponseWriter, req *http.Request) {
+
+}
