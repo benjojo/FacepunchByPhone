@@ -88,7 +88,7 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 
 }
 
-func readThread(rw http.ResponseWriter, req *http.Request, prams *martini.Params) {
+func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params) string {
 	Testresponce := Response{}
 
 	handler, handlere := strconv.ParseInt(prams["handler"], 10, 64)
@@ -103,6 +103,9 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams *martini.Params
 		}
 		return XMLHead + string(outputb)
 	}
+	// Grab the reults that where read out to them
+
+	ThreadList := ThreadCache[int(handler)]
 
 	Testresponce.Say = "hi"
 	outputb, e := xml.Marshal(Testresponce)
