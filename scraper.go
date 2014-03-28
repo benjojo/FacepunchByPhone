@@ -12,6 +12,25 @@ type Thread struct {
 	ThreadName string
 }
 
+type Post struct {
+	Content string
+}
+
+func GetThreadPosts(threaddid int) (Posts []Post, e error) {
+	doc, e := gq.NewDocument(fmt.Sprintf("https://facepunch.com/showthread.php?t=%d", threaddid))
+	if e != nil {
+		return Posts, fmt.Errorf("Could not load section page")
+	}
+
+	Posts = make([]Post, 0)
+	doc.Find(".postcontainer").Each(func(i int, s *gq.Selection) {
+		NewPost := Post{}
+		NewPost.Content = s.Find(".restore").Text()
+		Posts = append(Posts, NewPost)
+	})
+	return Posts, e
+}
+
 func GetSectionThreads(sectionid int) (Threads []Thread, e error) {
 	doc, e := gq.NewDocument(fmt.Sprintf("https://facepunch.com/forumdisplay.php?f=%d", sectionid))
 	if e != nil {
