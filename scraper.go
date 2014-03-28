@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	gq "github.com/PuerkitoBio/goquery"
+	"strconv"
 	"strings"
 )
 
 type Thread struct {
-	ID         string
+	ID         int
 	ThreadName string
 }
 
@@ -47,8 +48,9 @@ func GetSectionThreads(sectionid int) (Threads []Thread, e error) {
 		if !exists {
 			return
 		}
+		tid, _ := strconv.ParseInt(strings.Split(URL, "=")[len(strings.Split(URL, "="))-1], 10, 64)
+		t.ID = int(tid)
 
-		t.ID = strings.Split(URL, "=")[len(strings.Split(URL, "="))-1]
 		Threads = append(Threads, t)
 	})
 

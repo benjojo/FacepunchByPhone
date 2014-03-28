@@ -107,7 +107,17 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 
 	ThreadList := ThreadCache[int(handler)]
 
-	Testresponce.Say = "hi"
+	ThreadPosts, e := GetThreadPosts(ThreadList[dnum].ID)
+	if e != nil {
+		Testresponce.Say = "An internal error happened... sorry"
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		return XMLHead + string(outputb)
+	}
+
+	Testresponce.Say = ThreadPosts[0].Content
 	outputb, e := xml.Marshal(Testresponce)
 	if e != nil {
 		debug.Println("Oh fuck. ", e)
