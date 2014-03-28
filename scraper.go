@@ -19,6 +19,7 @@ type Post struct {
 
 func GetThreadPosts(threaddid int) (Posts []Post, e error) {
 	doc, e := gq.NewDocument(fmt.Sprintf("https://facepunch.com/showthread.php?t=%d", threaddid))
+	fmt.Println(threaddid)
 	if e != nil {
 		return Posts, fmt.Errorf("Could not load section page")
 	}
@@ -28,6 +29,7 @@ func GetThreadPosts(threaddid int) (Posts []Post, e error) {
 		NewPost := Post{}
 		NewPost.Content = s.Find(".restore").Text()
 		Posts = append(Posts, NewPost)
+		fmt.Println(NewPost.Content)
 	})
 	return Posts, e
 }
@@ -48,7 +50,8 @@ func GetSectionThreads(sectionid int) (Threads []Thread, e error) {
 		if !exists {
 			return
 		}
-		tid, _ := strconv.ParseInt(strings.Split(URL, "=")[len(strings.Split(URL, "="))-1], 10, 64)
+		fmt.Println(strings.Split(strings.Split(URL, "=")[len(strings.Split(URL, "="))-2], "&")[0])
+		tid, _ := strconv.ParseInt(strings.Split(strings.Split(URL, "=")[len(strings.Split(URL, "="))-2], "&")[0], 10, 64)
 		t.ID = int(tid)
 
 		Threads = append(Threads, t)
