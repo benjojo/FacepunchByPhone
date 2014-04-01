@@ -90,6 +90,12 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 
 func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params) string {
 	Testresponce := Response{}
+	ReturnGather := Gather{}
+	ReturnGather.Action = "/incoming"
+	ReturnGather.Method = "POST"
+	ReturnGather.NumDigi = "1"
+	ReturnGather.Say = "Press any number to return back to the main page."
+	Testresponce.Gather = ReturnGather
 
 	handler, handlere := strconv.ParseInt(prams["handler"], 10, 64)
 
@@ -116,7 +122,9 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		}
 		return XMLHead + string(outputb)
 	}
-
+	if len(ThreadPosts) == 0 {
+		Testresponce.Say = "Oh dear... We are unable to read that thread."
+	}
 	Testresponce.Say = ThreadPosts[0].Content
 	outputb, e := xml.Marshal(Testresponce)
 	if e != nil {
