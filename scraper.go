@@ -27,7 +27,7 @@ func GetThreadPosts(threaddid int) (Posts []Post, e error) {
 	Posts = make([]Post, 0)
 	doc.Find(".postcontainer").Each(func(i int, s *gq.Selection) {
 		NewPost := Post{}
-		NewPost.Content = s.Find(".restore").Text()
+		NewPost.Content = fromWindows1252(s.Find(".restore").Text())
 		Posts = append(Posts, NewPost)
 		fmt.Println(NewPost.Content)
 	})
