@@ -29,10 +29,10 @@ const (
 
 func newCaller() string {
 	Testresponce := Response{}
-	Testresponce.Say = WelcomeText + GetSectionsString()
+	Testresponce.Say = "."
 
 	InputSetup := Gather{}
-	InputSetup.Say = "Please key what sections you want to browse"
+	InputSetup.Say = GetSectionsString() + "... Please key what sections you want to browse"
 	InputSetup.NumDigi = "1"
 	InputSetup.Action = "/sections"
 	InputSetup.Method = "GET"
