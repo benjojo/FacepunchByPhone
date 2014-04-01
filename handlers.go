@@ -122,8 +122,13 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		}
 		return XMLHead + string(outputb)
 	}
-	if len(ThreadPosts) == 0 {
+	if len(ThreadPosts) < 1 {
 		Testresponce.Say = "Oh dear... We are unable to read that thread."
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		return XMLHead + string(outputb)
 	}
 	Testresponce.Say = ThreadPosts[0].Content
 	outputb, e := xml.Marshal(Testresponce)
