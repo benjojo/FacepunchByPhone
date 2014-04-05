@@ -23,9 +23,7 @@ func main() {
 	m := martini.Classic()
 	m.Get("/incoming", newCaller)
 	m.Post("/incoming", newCaller)
-
 	m.Get("/sections", readSections)
-
 	m.Get("/threads/:handler", readThread)
 
 	m.Run()
