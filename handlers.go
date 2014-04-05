@@ -72,7 +72,7 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 
 	Testresponce.Gather = InputSetup
 
-	output := ""
+	output := ThreadsText
 
 	for k, v := range listing {
 		output += fmt.Sprintf("Press %d for the thread %s... ", k, v.ThreadName)
