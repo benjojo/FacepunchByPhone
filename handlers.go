@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-var XMLHead string = `<?xml version="1.0" encoding="UTF-8"?>` + "\n"
+var XMLHeader string = `<?xml version="1.0" encoding="UTF-8"?>` + "\n"
 
 type Response struct {
 	Say    string `xml:"Say"`
@@ -40,7 +40,7 @@ func newCaller() string {
 	Testresponce.Gather = InputSetup
 
 	output, _ := xml.Marshal(Testresponce)
-	return XMLHead + string(output)
+	return XMLHeader + string(output)
 }
 
 func readSections(rw http.ResponseWriter, req *http.Request) string {
@@ -50,7 +50,7 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	if e != nil || int(i) > len(ListSections()) {
 		Testresponce.Say = "I'm sorry that was not a valid responce"
 		output, _ := xml.Marshal(Testresponce)
-		return XMLHead + string(output)
+		return XMLHeader + string(output)
 	}
 
 	listing, e := GetSectionThreads(ListSections()[int(i)].SID)
@@ -58,7 +58,7 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	if e != nil {
 		Testresponce.Say = "I'm sorry we are unable to get a listing at this time"
 		output, _ := xml.Marshal(Testresponce)
-		return XMLHead + string(output)
+		return XMLHeader + string(output)
 	}
 
 	HandleCount++
@@ -84,7 +84,7 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	if e != nil {
 		debug.Println("Oh fuck. ", e)
 	}
-	return XMLHead + string(outputb)
+	return XMLHeader + string(outputb)
 
 }
 
@@ -97,17 +97,17 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 	ReturnGather.Say = "Press any number to return back to the main page."
 	Testresponce.Gather = ReturnGather
 
-	handler, handlere := strconv.ParseInt(prams["handler"], 10, 64)
+	handler, handlerr := strconv.ParseInt(prams["handler"], 10, 64)
 
 	diget := req.URL.Query().Get("Digits")
-	dnum, digete := strconv.ParseInt(diget, 10, 64)
-	if handlere != nil || digete != nil {
+	dnum, dnumerr := strconv.ParseInt(diget, 10, 64)
+	if handlerr != nil || dnumerr != nil {
 		Testresponce.Say = "An internal error happened... sorry"
 		outputb, e := xml.Marshal(Testresponce)
 		if e != nil {
 			debug.Println("Oh fuck. ", e)
 		}
-		return XMLHead + string(outputb)
+		return XMLHeader + string(outputb)
 	}
 	// Grab the reults that where read out to them
 
@@ -120,7 +120,7 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		if e != nil {
 			debug.Println("Oh fuck. ", e)
 		}
-		return XMLHead + string(outputb)
+		return XMLHeader + string(outputb)
 	}
 	if len(ThreadPosts) < 1 {
 		Testresponce.Say = "Oh dear... We are unable to read that thread."
@@ -128,13 +128,12 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		if e != nil {
 			debug.Println("Oh fuck. ", e)
 		}
-		return XMLHead + string(outputb)
+		return XMLHeader + string(outputb)
 	}
 	Testresponce.Say = ThreadPosts[0].Content
 	outputb, e := xml.Marshal(Testresponce)
 	if e != nil {
 		debug.Println("Oh fuck. ", e)
 	}
-	return XMLHead + string(outputb)
-
+	return XMLHeader + string(outputb)
 }
