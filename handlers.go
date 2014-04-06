@@ -49,6 +49,8 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	if e != nil || int(i) > len(ListSections()) {
 		Testresponce.Say = "I'm sorry that was not a valid responce"
 		output, _ := xml.Marshal(Testresponce)
+		Testresponce.Gather = GetReturnHandler()
+
 		return XMLHeader + string(output)
 	}
 
@@ -57,6 +59,8 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 	if e != nil {
 		Testresponce.Say = "I'm sorry we are unable to get a listing at this time"
 		output, _ := xml.Marshal(Testresponce)
+		Testresponce.Gather = GetReturnHandler()
+
 		return XMLHeader + string(output)
 	}
 
@@ -87,14 +91,18 @@ func readSections(rw http.ResponseWriter, req *http.Request) string {
 
 }
 
-func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params) string {
-	Testresponce := Response{}
+func GetReturnHandler() Gather {
 	ReturnGather := Gather{}
 	ReturnGather.Action = "/incoming"
 	ReturnGather.Method = "POST"
 	ReturnGather.NumDigi = "1"
 	ReturnGather.Say = "Press any number to return back to the main page."
-	Testresponce.Gather = ReturnGather
+	return ReturnGather
+}
+
+func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params) string {
+	Testresponce := Response{}
+	Testresponce.Gather = GetReturnHandler()
 
 	handler, handlerr := strconv.ParseInt(prams["handler"], 10, 64)
 
