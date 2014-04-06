@@ -112,6 +112,7 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 	// Grab the reults that where read out to them
 
 	ThreadList := ThreadCache[int(handler)]
+	delete(ThreadCache, handler) // This is no longer needed, we can free ram now.
 
 	ThreadPosts, e := GetThreadPosts(ThreadList[dnum].ID)
 	if e != nil {
