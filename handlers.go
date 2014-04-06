@@ -44,8 +44,7 @@ func newCaller() string {
 }
 
 func readSections(rw http.ResponseWriter, req *http.Request) string {
-	d := req.URL.Query().Get("Digits")
-	i, e := strconv.ParseInt(d, 10, 64)
+	i, e := strconv.ParseInt(req.URL.Query().Get("Digits"), 10, 64)
 	Testresponce := Response{}
 	if e != nil || int(i) > len(ListSections()) {
 		Testresponce.Say = "I'm sorry that was not a valid responce"
@@ -99,8 +98,7 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 
 	handler, handlerr := strconv.ParseInt(prams["handler"], 10, 64)
 
-	diget := req.URL.Query().Get("Digits")
-	dnum, dnumerr := strconv.ParseInt(diget, 10, 64)
+	dnum, dnumerr := strconv.ParseInt(req.URL.Query().Get("Digits"), 10, 64)
 	if handlerr != nil || dnumerr != nil {
 		Testresponce.Say = "An internal error happened... sorry"
 		outputb, e := xml.Marshal(Testresponce)
