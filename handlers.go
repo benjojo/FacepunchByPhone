@@ -118,6 +118,14 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 	// Grab the reults that where read out to them
 
 	ThreadList := ThreadCache[int(handler)]
+	if ThreadCache == nil {
+		Testresponce.Say = "An internal error happened... sorry"
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		return XMLHeader + string(outputb)
+	}
 	delete(ThreadCache, handler) // This is no longer needed, we can free ram now.
 
 	ThreadPosts, e := GetThreadPosts(ThreadList[dnum].ID)
