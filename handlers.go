@@ -100,6 +100,73 @@ func GetReturnHandler() Gather {
 	return ReturnGather
 }
 
+func readThreadPostNum(rw http.ResponseWriter, req *http.Request, prams martini.Params) string {
+	Testresponce := Response{}
+
+	handler, handlerr := strconv.ParseInt(prams["handler"], 10, 64)
+	postnum, postnumerr := strconv.ParseInt(prams["postnumber"], 10, 64)
+
+	dnum, dnumerr := strconv.ParseInt(req.URL.Query().Get("Digits"), 10, 64)
+	if handlerr != nil || dnumerr != nil || postnumerr != nil {
+		Testresponce.Say = "An internal error happened... sorry"
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		Testresponce.Gather = GetReturnHandler()
+
+		return XMLHeader + string(outputb)
+	}
+	// Grab the reults that where read out to them
+
+	ReturnGather := Gather{}
+	ReturnGather.Action = fmt.Sprintf("/threads/%d/%d", handler, postnum+1)
+	ReturnGather.Method = "GET"
+	ReturnGather.NumDigi = "1"
+	ReturnGather.Say = "Press any number to listen to the next post"
+	Testresponce.Gather = ReturnGather
+
+	ThreadList := ThreadCache[int(handler)]
+	if ThreadCache == nil {
+		Testresponce.Say = "An internal error happened... sorry"
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		Testresponce.Gather = GetReturnHandler()
+
+		return XMLHeader + string(outputb)
+	}
+
+	ThreadPosts, e := GetThreadPosts(ThreadList[dnum].ID)
+	if e != nil {
+		Testresponce.Say = "An internal error happened... sorry"
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		Testresponce.Gather = GetReturnHandler()
+
+		return XMLHeader + string(outputb)
+	}
+	if len(ThreadPosts) < postnum {
+		Testresponce.Say = "Oh dear... We are unable to read that thread."
+		outputb, e := xml.Marshal(Testresponce)
+		if e != nil {
+			debug.Println("Oh fuck. ", e)
+		}
+		Testresponce.Gather = GetReturnHandler()
+
+		return XMLHeader + string(outputb)
+	}
+	Testresponce.Say = ThreadPosts[postnum-1].Content
+	outputb, e := xml.Marshal(Testresponce)
+	if e != nil {
+		debug.Println("Oh fuck. ", e)
+	}
+	return XMLHeader + string(outputb)
+}
+
 func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params) string {
 	Testresponce := Response{}
 	Testresponce.Gather = GetReturnHandler()
@@ -113,9 +180,18 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		if e != nil {
 			debug.Println("Oh fuck. ", e)
 		}
+		Testresponce.Gather = GetReturnHandler()
+
 		return XMLHeader + string(outputb)
 	}
 	// Grab the reults that where read out to them
+
+	ReturnGather := Gather{}
+	ReturnGather.Action = fmt.Sprintf("/threads/%d/%d", handler, 1)
+	ReturnGather.Method = "GET"
+	ReturnGather.NumDigi = "1"
+	ReturnGather.Say = "Press any number to listen to the next post"
+	Testresponce.Gather = ReturnGather
 
 	ThreadList := ThreadCache[int(handler)]
 	if ThreadCache == nil {
@@ -124,9 +200,10 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		if e != nil {
 			debug.Println("Oh fuck. ", e)
 		}
+		Testresponce.Gather = GetReturnHandler()
+
 		return XMLHeader + string(outputb)
 	}
-	delete(ThreadCache, handler) // This is no longer needed, we can free ram now.
 
 	ThreadPosts, e := GetThreadPosts(ThreadList[dnum].ID)
 	if e != nil {
@@ -135,6 +212,8 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		if e != nil {
 			debug.Println("Oh fuck. ", e)
 		}
+		Testresponce.Gather = GetReturnHandler()
+
 		return XMLHeader + string(outputb)
 	}
 	if len(ThreadPosts) < 1 {
@@ -143,6 +222,8 @@ func readThread(rw http.ResponseWriter, req *http.Request, prams martini.Params)
 		if e != nil {
 			debug.Println("Oh fuck. ", e)
 		}
+		Testresponce.Gather = GetReturnHandler()
+
 		return XMLHeader + string(outputb)
 	}
 	Testresponce.Say = ThreadPosts[0].Content
