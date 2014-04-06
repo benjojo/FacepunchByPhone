@@ -30,6 +30,7 @@ func main() {
 	m.Post("/incoming", newCaller)
 	m.Get("/sections", readSections)
 	m.Get("/threads/:handler", readThread) // Because threads shift around the :handler is needed.
+	m.Get("/threads/:handler/:postnumber", readThreadPostNum)
 
 	m.Run()
 }
