@@ -149,7 +149,7 @@ func readThreadPostNum(rw http.ResponseWriter, req *http.Request, prams martini.
 
 		return XMLHeader + string(outputb)
 	}
-	if len(ThreadPosts) < postnum {
+	if len(ThreadPosts) < int(postnum) {
 		Testresponce.Say = "Oh dear... We are unable to read that thread."
 		outputb, e := xml.Marshal(Testresponce)
 		if e != nil {
